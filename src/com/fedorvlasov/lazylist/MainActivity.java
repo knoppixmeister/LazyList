@@ -8,39 +8,30 @@ import android.widget.Button;
 import android.widget.ListView;
 
 public class MainActivity extends Activity {
-    
-    ListView list;
+	ListView listView;
     LazyAdapter adapter;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
-        
-        list=(ListView)findViewById(R.id.list);
-        adapter=new LazyAdapter(this, mStrings);
-        list.setAdapter(adapter);
-        
-        Button b=(Button)findViewById(R.id.button1);
-        b.setOnClickListener(listener);
-    }
-    
-    @Override
-    public void onDestroy()
-    {
-        list.setAdapter(null);
-        super.onDestroy();
-    }
-    
-    public OnClickListener listener=new OnClickListener(){
-        @Override
-        public void onClick(View arg0) {
-            adapter.imageLoader.clearCache();
-            adapter.notifyDataSetChanged();
-        }
-    };
-    
-    private String[] mStrings={
+
+        adapter = new LazyAdapter(this, mStrings);
+        listView = (ListView)findViewById(R.id.list);
+        listView.setAdapter(adapter);
+
+        Button b = (Button)findViewById(R.id.button1);
+        b.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                adapter.imageLoader.clearCache();
+                adapter.notifyDataSetChanged();
+                listView.invalidateViews();
+            }
+        });
+	}
+
+    private String[] mStrings = {
             "http://a3.twimg.com/profile_images/670625317/aam-logo-v3-twitter.png",
             "http://a3.twimg.com/profile_images/740897825/AndroidCast-350_normal.png",
             "http://a3.twimg.com/profile_images/121630227/Droid_normal.jpg",

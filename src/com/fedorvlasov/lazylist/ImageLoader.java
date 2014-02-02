@@ -21,37 +21,34 @@ import android.graphics.BitmapFactory;
 import android.widget.ImageView;
 
 public class ImageLoader {
-    
     MemoryCache memoryCache=new MemoryCache();
     FileCache fileCache;
     private Map<ImageView, String> imageViews=Collections.synchronizedMap(new WeakHashMap<ImageView, String>());
     ExecutorService executorService;
-    Handler handler=new Handler();//handler to display images in UI thread
-    
-    public ImageLoader(Context context){
-        fileCache=new FileCache(context);
-        executorService=Executors.newFixedThreadPool(5);
+    Handler handler = new Handler();//handler to display images in UI thread
+
+    public ImageLoader(Context context) {
+        fileCache = new FileCache(context);
+        executorService = Executors.newFixedThreadPool(5);
     }
-    
-    final int stub_id=R.drawable.stub;
-    public void DisplayImage(String url, ImageView imageView)
-    {
+
+    final int stub_id = R.drawable.stub;
+
+    public void DisplayImage(String url, ImageView imageView) {
         imageViews.put(imageView, url);
-        Bitmap bitmap=memoryCache.get(url);
-        if(bitmap!=null)
-            imageView.setImageBitmap(bitmap);
-        else
-        {
+        Bitmap bitmap = memoryCache.get(url);
+        if(bitmap != null) imageView.setImageBitmap(bitmap);
+        else {
             queuePhoto(url, imageView);
             imageView.setImageResource(stub_id);
         }
     }
-        
+   
     private void queuePhoto(String url, ImageView imageView)
     {
-        PhotoToLoad p=new PhotoToLoad(url, imageView);
+        PhotoToLoad p = new PhotoToLoad(url, imageView);
         executorService.submit(new PhotosLoader(p));
-    }
+	}
     
     private Bitmap getBitmap(String url) 
     {
@@ -132,13 +129,13 @@ public class ImageLoader {
             imageView=i;
         }
     }
-    
+
     class PhotosLoader implements Runnable {
         PhotoToLoad photoToLoad;
-        PhotosLoader(PhotoToLoad photoToLoad){
+        PhotosLoader(PhotoToLoad photoToLoad) {
             this.photoToLoad=photoToLoad;
         }
-        
+
         @Override
         public void run() {
             try{
