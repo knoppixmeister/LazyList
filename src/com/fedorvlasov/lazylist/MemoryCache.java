@@ -9,22 +9,21 @@ import android.graphics.Bitmap;
 import android.util.Log;
 
 public class MemoryCache {
-
     private static final String TAG = "MemoryCache";
     private Map<String, Bitmap> cache=Collections.synchronizedMap(
-            new LinkedHashMap<String, Bitmap>(10,1.5f,true));//Last argument true for LRU ordering
+            new LinkedHashMap<String, Bitmap>(10, 1.5f, true));//Last argument true for LRU ordering
     private long size=0;//current allocated size
     private long limit=1000000;//max memory in bytes
 
-    public MemoryCache(){
+    public MemoryCache() {
         //use 25% of available heap size
         setLimit(Runtime.getRuntime().maxMemory()/4);
     }
-    
-    public void setLimit(long new_limit){
+
+	public void setLimit(long new_limit) {
         limit=new_limit;
         Log.i(TAG, "MemoryCache will use up to "+limit/1024./1024.+"MB");
-    }
+	}
 
     public Bitmap get(String id){
         try{
@@ -76,8 +75,8 @@ public class MemoryCache {
     }
 
     long getSizeInBytes(Bitmap bitmap) {
-        if(bitmap==null)
-            return 0;
+        if(bitmap==null) return 0;
+
         return bitmap.getRowBytes() * bitmap.getHeight();
     }
 }
